@@ -1,0 +1,118 @@
+@startuml
+
+Class CreateItemInventory{
++startProcess(String, String, double): InventoryItem
+}
+
+Class InventoryItem{
+-SimpleStringProperty: name
+-SimpleStringProperty: serialNumber
+-SimpleDoubleProperty: value
+
++nameProperty(): SimpleStringProperty
++serialNumberProperty(): SimpleStringProperty
++valueProperty(): SimpleDoubleProperty
++getName(): String
++setName(String)
++getSerialNumber(): String
++setSerialNumber(String)
++getValue(): double
++setValue(double)
+}
+
+Class InventoryManagementApplication{
++start(Stage)
++main(String[])
+}
+
+Class InventoryManagementController{
+-ObservableList<InventoryItem>: itemObservableList
+-FileChooser fileChooser
+-Stage: stage
+-VBox: vBox
+-TextField: taskTitle
+-TableView<InventoryItem>: tableView
+-TableColumn<InventoryItem, Double>: itemValueColumn
+-TableColumn<InventoryItem, String>: itemNameColumn
+-TableColumn<InventoryItem, String>: itemNameColumn
+-TextField: itemSerialNumberTextField
+-TextField: itemNameTextField
+-TextField: itemValueTextField
++initialize(URL, ResourceBundle)
+-tableViewLoad()
++addNewItem()
+-createNewItem(TextField, TextField, TextField)
+-addToTableView(InventoryItem)
++openFiles()
+-setUpFileChooserOpen()
++saveFiles
+-setUpFileChooserSave()
+}
+
+Class ItemListOperations{
++addToList(ObservableList<Item> controllerList, Item newItem): boolean
++deleteFromList(ObservableList<Item> controllerList, Item newItem)
+}
+
+Class OpenFile{
++openListFromTxtFile(TableView<InventoryItem>, ObservableList<InventoryItem>, File)
++openListFromTsvFile(TableView<InventoryItem>, ObservableList<InventoryItem>, File)
++openListFromJsonFile(TableView<InventoryItem>, ObservableList<InventoryItem>, File)
+}
+
+Class PopupMessage{
++invalidName()
++invalidSerialNumber()
++invalidValue()
++nonUniqueData()
++confirmClearList()
++confirmCloseList()
+}
+
+Class SaveFile{
++saveListAsTxtFile(ObservableList<InventoryItem>, File)
++saveListAsTsvFile(ObservableList<InventoryItem>, File)
++saveListAsJsonFile(ObservableList<InventoryItem>, File)
+}
+
+Class TableViewUtils{
+-TableView<Item>: tableView
+-ObservableList<Item>: itemObservableList
+-ContextMenu: contextMenu
+-List<MenuItem>:additionalMenuItems
++TableViewUtils(TableView, ObservableList<Item>)
+-registerListeners()
+#showContextMenu()
+-setFixedHeader()
+-findButtonNode()
+-getTableHeaderRow()
+-ContextMenu()
+#doSelectAll(Event e)
+#doDeselectAll(Event e)
++isShowAllColumnsOperators(): boolean
+}
+
+Class ValidateTextFields{
++validateName(String): boolean
++validateSerialNumber(String): boolean
++validateValue(double): boolean
+}
+
+InventoryManagementApplication..>InventoryManagementController
+InventoryManagementController..>"*"InventoryItem
+InventoryManagementController..>CreateItemInventory
+InventoryManagementController..> TableViewUtils
+InventoryManagementController..>OpenFile
+InventoryManagementController..>SaveFile
+InventoryManagementController..>ValidateTextFields
+InventoryManagementController..>ItemListOperations
+
+OpenFile..>InventoryItem
+
+CreateItemInventory..>ValidateTextFields
+ValidateTextFields..>PopupMessage
+
+TableViewUtils..>PopupMessage
+
+ItemListOperations..>PopupMessage
+@enduml
