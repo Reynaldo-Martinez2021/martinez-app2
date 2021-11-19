@@ -5,20 +5,20 @@ package baseline;
  *  Copyright 2021 Reynaldo Martinez
  */
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SaveFileTest {
 
@@ -31,17 +31,17 @@ class SaveFileTest {
                     {
                       "serialNumber": "A-XB1-24A-XY3",
                       "name": "Xbox Series X",
-                      "value": "1499.99"
+                      "value": 1499.99
                     },
                     {
                       "serialNumber": "S-40A-ZBD-E47",
                       "name": "Samsung TV",
-                      "value": "599.99"
+                      "value": 599.99
                     },
                     {
                       "serialNumber": "X-40A-ZBD-E47",
                       "name": "Playstation 5",
-                      "value": "1399.99"
+                      "value": 1399.99
                     }
                   ]
                 }""";
@@ -225,14 +225,25 @@ class SaveFileTest {
         //create a try block with buffered writer
         try(BufferedWriter writer = new BufferedWriter(new FileWriter("testingFiles\\saveListAsHtmlFile.html"))) {
             //create a string for the header
-            String header = "<style type=\"text/css\">\n" +
-                    ".tg  {border-collapse:collapse;border-spacing:0;}\n" +
-                    ".tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n" +
-                    "  overflow:hidden;padding:10px 5px;word-break:normal;}\n" +
-                    ".tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;\n" +
-                    "  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}\n" +
-                    ".tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}\n" +
-                    "</style>\n<table class=\"tg\">\n<thead>\n  <tr>\n    <th class=\"tg-0pky\">Serial Number</th>\n    <th class=\"tg-0pky\">Name</th>\n    <th class=\"tg-0pky\">Value</th>\n  </tr>\n</thead>\n<tbody>\n";
+            String header = """
+                    <style type="text/css">
+                    .tg  {border-collapse:collapse;border-spacing:0;}
+                    .tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+                      overflow:hidden;padding:10px 5px;word-break:normal;}
+                    .tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+                      font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+                    .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+                    </style>
+                    <table class="tg">
+                    <thead>
+                      <tr>
+                        <th class="tg-0pky">Serial Number</th>
+                        <th class="tg-0pky">Name</th>
+                        <th class="tg-0pky">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    """;
             writer.write(header);
             //append the header to testing text
             testingText.append(header);
