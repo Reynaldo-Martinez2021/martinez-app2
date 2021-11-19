@@ -6,8 +6,8 @@ package baseline;
  */
 
 public class JsonItem {
-    public String name;
     public String serialNumber;
+    public String name;
     public double value;
 
     public String getName() {

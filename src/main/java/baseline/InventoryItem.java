@@ -9,8 +9,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class InventoryItem {
-    private final SimpleStringProperty name = new SimpleStringProperty();
     private final SimpleStringProperty serialNumber = new SimpleStringProperty();
+    private final SimpleStringProperty name = new SimpleStringProperty();
     private final SimpleDoubleProperty value = new SimpleDoubleProperty();
 
     public SimpleStringProperty nameProperty(){

@@ -11,7 +11,7 @@ import java.io.File;
 
 public class SaveFile {
 
-    public void saveListAsTxtFile(ObservableList<InventoryItem> inventoryItemList, File file){
+    public void saveListAsJsonFile(ObservableList<InventoryItem> inventoryItemList, File file){
         //create a try block with buffered writer
         //create for loop to loop through items and build the string
         //create a string for text file
@@ -23,7 +23,7 @@ public class SaveFile {
         //create a string for Tsv file
     }
 
-    public void saveListAsJsonFile(ObservableList<InventoryItem> inventoryItemList, File file){
+    public void saveListAsHtmlFile(ObservableList<InventoryItem> inventoryItemList, File file){
         //create a try block with buffered writer
         //create for loop to loop through items and build object
         //create an object for json file
