@@ -12,7 +12,7 @@ import java.io.File;
 
 public class OpenFile {
 
-    public void openListFromTxtFile(TableView<InventoryItem> tableView, ObservableList<InventoryItem> inventoryItemObservableList, File file){
+    public void openListFromHtmlFile(TableView<InventoryItem> tableView, ObservableList<InventoryItem> inventoryItemObservableList, File file){
         //create an observable list to store the contents of file list
         //create string for bufferedReader
         //create a try block with bufferedReader opening up file
