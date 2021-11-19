@@ -1,18 +1,16 @@
 package baseline;
 
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.text.NumberFormat;
 import java.util.ResourceBundle;
 
 /*
@@ -85,20 +83,37 @@ public class InventoryManagementController {
     @FXML // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL location, ResourceBundle resources) {
         //enable the table menu
-
+        tableUtils = new TableViewUtils(tableView, inventoryItemObservableList);
         //set the tableView selection model
-
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         //set the table row factory
+        tableView.setRowFactory(param -> {
             //create a table row
+            final TableRow<InventoryItem> row = new TableRow<>();
             //create a context menu
+            final ContextMenu contextMenu = new ContextMenu();
             //add a menu option called remove
-            //have a set Action for the right click on mouse
+            final MenuItem removeMenuItem = new MenuItem("Remove");
+            //have a set Action for the right click on the mouse
+            removeMenuItem.setOnAction(event -> {
                 //create an instance of itemListOperations
+                ItemListOperations operations = new ItemListOperations();
                 //delete the row from itemObservableList
-                //call the tableViewLoad function to repopulate the tableview
-            //add the removeMenu item
-            //bind the row and context menu
+                operations.deleteFromList(inventoryItemObservableList, row.getItem());
+                //call the tableViewLoad function to repopulate the tableView
+                tableViewLoad();
+            });
 
+            //add the removeMenu item
+            contextMenu.getItems().add(removeMenuItem);
+            //bind the row and context menu
+            row.contextMenuProperty().bind(
+                    Bindings.when(row.emptyProperty()).then((ContextMenu)null).otherwise(contextMenu)
+            );
+            return row;
+        });
+
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
         //initialize the valueColumn and add cell factory
         //set table cell factory
         //set edit commit to the item's completed Variable
