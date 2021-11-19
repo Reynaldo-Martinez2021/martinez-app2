@@ -23,4 +23,4 @@ javafx {
     modules = [ 'javafx.controls',  'javafx.fxml' ]
 }
 
-mainClassName = "baseline.TodoListApplication"
+mainClassName = "baseline.InventoryManagementApplication"
