@@ -35,7 +35,7 @@ public class InventoryManagementController {
     TableViewUtils tableUtils;
 
     //create an instance of popup
-
+    PopupMessage popup;
 
     @FXML // fx:id="vBox"
     private VBox vBox;
