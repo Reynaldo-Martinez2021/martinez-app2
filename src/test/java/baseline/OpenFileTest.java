@@ -5,6 +5,8 @@ package baseline;
  *  Copyright 2021 Reynaldo Martinez
  */
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,12 +14,26 @@ import static org.junit.jupiter.api.Assertions.*;
 class OpenFileTest {
 
     @Test
-    void openListFromTxtFile() {
+    void openListFromTxtFile() throws Exception{
         //create an actual list
-
+        ObservableList<InventoryItem> actualList = FXCollections.observableArrayList();
         //create the items to fill actualList
-        //set the first item
-        //add to list
+        InventoryItem first = new InventoryItem();
+        InventoryItem second = new InventoryItem();
+        InventoryItem third = new InventoryItem();
+
+        //set the values for all items
+        first.setName("Xbox Series X");
+        first.setSerialNumber("A-XB1-24A-XY3");
+        first.setValue(1499.99);
+
+        second.setName("Samsung TV");
+        second.setSerialNumber("S-40A-ZBD-E47");
+        second.setValue(599.99);
+
+        third.setName("Playstation 5");
+        third.setSerialNumber("X-40A-ZBD-E47");
+        third.setValue(1399.99);
 
 
         //create the second item
@@ -42,7 +58,7 @@ class OpenFileTest {
     }
 
     @Test
-    void openListFromTsvFile() {
+    void openListFromTsvFile() throws Exception{
         //create an actual list
 
         //create the items to fill actualList
@@ -72,7 +88,7 @@ class OpenFileTest {
     }
 
     @Test
-    void openListFromJsonFile() {
+    void openListFromJsonFile() throws Exception{
         //create an actual list
 
         //create the items to fill actualList
