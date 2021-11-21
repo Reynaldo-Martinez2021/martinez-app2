@@ -15,8 +15,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -253,7 +257,14 @@ public class InventoryManagementController implements Initializable {
 
         //create new FileChooser() for fileChooser
         fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter txtExtension = new FileChooser.ExtensionFilter("TEXT files (*.txt)", "*.txt");
+        fileChooser.getExtensionFilters().add(txtExtension);
+        FileChooser.ExtensionFilter jsonExtension = new FileChooser.ExtensionFilter("JSON files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(jsonExtension);
+        FileChooser.ExtensionFilter htmlExtension = new FileChooser.ExtensionFilter("HTML files (*.html)", "*.html");
+        fileChooser.getExtensionFilters().add(htmlExtension);
     }
+
 
     //method to load tableView
     private void tableViewLoad(){
@@ -313,7 +324,6 @@ public class InventoryManagementController implements Initializable {
         OpenFile open = new OpenFile();
         //create a stage from vBox and pass the stage to menuOptions
         stage = (Stage) vBox.getScene().getWindow();
-        //show the open dialog
         File file = fileChooser.showOpenDialog(stage);
         //check if file is not null
         if(file != null) {
@@ -336,12 +346,20 @@ public class InventoryManagementController implements Initializable {
     //this method wil be called from saveFiles to set up the file chooser
     void setUpFileChooserSave(){
         //create an instance of saveFile
+        SaveFile save = new SaveFile();
         //create a stage from vBox and pass the stage to menuOptions
+        stage = (Stage) vBox.getScene().getWindow();
         //set the name of file name
-        //set extension filter for txt files, json files, or tsv files
-        //add the extension
+        fileChooser.setInitialFileName(taskTitle.getText());
         //show the save dialog
+        File file = fileChooser.showSaveDialog(stage);
         //if statement checking file is not null
+        if(file != null){
+            if(file.getName().contains(".html")) save.saveListAsHtmlFile(itemObservableList, file);
+            else if(file.getName().contains(".json")) save.saveListAsJsonFile(itemObservableList, file);
+            else if(file.getName().contains(".txt")) save.saveListAsTsvFile(itemObservableList, file);
+            else System.out.println("wrong file");
+        }
     }
 
 
