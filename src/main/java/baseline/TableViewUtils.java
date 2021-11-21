@@ -187,7 +187,7 @@ public class TableViewUtils {
         }
 
         //create checkBox to clear the whole list
-        CheckBox clearTableView = new CheckBox("Clear To-Do List");
+        CheckBox clearTableView = new CheckBox("Clear Inventory List");
         clearTableView.selectedProperty().addListener((observable, oldValue, newValue)-> {
             //check to see if the checkBox is selected
             if(clearTableView.isSelected()){
@@ -218,18 +218,24 @@ public class TableViewUtils {
     //create a function to deselect each column
     protected void doDeselectAll(Event e) {
         //create a for loop to get each column
-        //set each column to not visible
+        for (TableColumn<?,?> obj : tableView.getColumns()) {
+            (obj).setVisible(false);
+        }
+        e.consume();
     }
 
     //create a function to select each column
     protected void doSelectAll(Event e) {
         //create a for loop to get each column
-        //set each column to visible
+        for (TableColumn<?,?> obj : tableView.getColumns()) {
+            (obj).setVisible(true);
+        }
+        e.consume();
 
     }
 
     public boolean isShowAllColumnsOperators() {
         //create boolean showColumns operators and set that value to true
-        return false;
+        return true;
     }
 }

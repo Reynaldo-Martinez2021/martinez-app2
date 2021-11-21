@@ -42,7 +42,7 @@ public class InventoryItem {
     }
 
     //check to see if "double" or "Double" works better
-    public final double getValue(){
+    public final Double getValue(){
         return value.get();
     }
 

@@ -79,9 +79,9 @@
    </Separator>
    <TableView fx:id="tableView" editable="true" focusTraversable="false" tableMenuButtonVisible="true">
       <columns>
-         <TableColumn fx:id="serialNumberColumn" maxWidth="500.0" minWidth="250.0" prefWidth="375.0" resizable="false" text="Serial Number" />
+         <TableColumn fx:id="itemSerialNumberColumn" maxWidth="500.0" minWidth="250.0" prefWidth="375.0" resizable="false" text="Serial Number" />
          <TableColumn fx:id="itemNameColumn" maxWidth="500.0" minWidth="200.0" prefWidth="400.0" resizable="false" text="Item Name" />
-         <TableColumn fx:id="valueColumn" maxWidth="250.0" minWidth="100.0" prefWidth="185.0" resizable="false" text="Value" />
+         <TableColumn fx:id="itemValueColumn" maxWidth="250.0" minWidth="100.0" prefWidth="185.0" resizable="false" text="Value" />
       </columns>
       <VBox.margin>
          <Insets />
@@ -102,7 +102,7 @@
       <rowConstraints>
          <RowConstraints minHeight="10.0" prefHeight="30.0" />
       </rowConstraints>
-      <TextField fx:id="serialNumberTextField" prefWidth="493.0" promptText="Enter a serial number">
+      <TextField fx:id="itemSerialNumberTextField" prefWidth="493.0" promptText="Enter a serial number">
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin>
@@ -111,7 +111,7 @@
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin></TextField>
-      <TextField promptText="Enter a value" GridPane.columnIndex="2">
+      <TextField fx:id="itemValueTextField" promptText="Enter a value" GridPane.columnIndex="2">
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin>
