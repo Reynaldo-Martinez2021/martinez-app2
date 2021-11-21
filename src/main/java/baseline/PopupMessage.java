@@ -87,4 +87,16 @@ public class PopupMessage {
             return false;
         } else return result.get() == ButtonType.OK;
     }
+
+    //create a method that will display error for nonUniqueData
+    public void invalidFile(){
+        //create a new Alert with error alert type
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        //set the title
+        alert.setTitle("Incorrect File");
+        //set the content text
+        alert.setContentText("The current file you are trying to open does not end with the extension .txt, .json, or .html");
+        //use showAndWait to wait for user input
+        alert.showAndWait();
+    }
 }

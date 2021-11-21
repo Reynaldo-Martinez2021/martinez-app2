@@ -324,16 +324,31 @@ public class InventoryManagementController implements Initializable {
         OpenFile open = new OpenFile();
         //create a stage from vBox and pass the stage to menuOptions
         stage = (Stage) vBox.getScene().getWindow();
+        //show the stage
         File file = fileChooser.showOpenDialog(stage);
         //check if file is not null
         if(file != null) {
-            //if not then call menus openList
+            //check if file name contains html
+            if(file.getName().contains(".html")) {
+                //call html method
+                open.openListFromHtmlFile(tableView,itemObservableList, file);
+                //set the title and subtract the .html extension
+                taskTitle.setText(file.getName().substring(0, file.getName().length()-5));
+            }
+            //else check if it is json
+            else if(file.getName().contains(".json")){
+                //call json method
+                open.openListFromJsonFile(tableView, itemObservableList, file);
+                //set the title and subtract the .json extension
+                taskTitle.setText(file.getName().substring(0, file.getName().length()-5));
+            }
             //check if fileName ends with .txt
-            //subtract the .txt from taskTitle
-            //else if fileName ends with .json
-            //subtract the .json from taskTitle
-            //else
-            //subtract the .tsv from taskTitle
+            else if(file.getName().contains(".txt")){
+                //call the tsv method
+                open.openListFromTsvFile(tableView, itemObservableList, file);
+                //set the title and subtract the .txt extension
+                taskTitle.setText(file.getName().substring(0, file.getName().length()-4));
+            }
         }
     }
 
@@ -358,7 +373,6 @@ public class InventoryManagementController implements Initializable {
             if(file.getName().contains(".html")) save.saveListAsHtmlFile(itemObservableList, file);
             else if(file.getName().contains(".json")) save.saveListAsJsonFile(itemObservableList, file);
             else if(file.getName().contains(".txt")) save.saveListAsTsvFile(itemObservableList, file);
-            else System.out.println("wrong file");
         }
     }
 
