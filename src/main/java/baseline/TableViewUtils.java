@@ -186,6 +186,9 @@ public class TableViewUtils {
             cm.getItems().add(cmi);
         }
 
+        // separator
+        cm.getItems().add(new SeparatorMenuItem());
+
         //create checkBox to clear the whole list
         CheckBox clearTableView = new CheckBox("Clear Inventory List");
         clearTableView.selectedProperty().addListener((observable, oldValue, newValue)-> {
@@ -195,6 +198,7 @@ public class TableViewUtils {
                 PopupMessage pop = new PopupMessage();
                 if(pop.confirmClearList()) {
                     //returns true clear items
+                    tableView.setItems(itemObservableList);
                     tableView.getItems().clear();
                 }
             }

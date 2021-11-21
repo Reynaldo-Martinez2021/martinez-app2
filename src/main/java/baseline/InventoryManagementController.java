@@ -1,29 +1,39 @@
 package baseline;
 
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.skin.TableViewSkinBase;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.converter.DoubleStringConverter;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
+
+import static java.lang.System.getProperties;
 
 /*
  *  UCF COP3330 Fall 2021 Application Assignment 2 Solution
  *  Copyright 2021 Reynaldo Martinez
  */
 
-public class InventoryManagementController {
+public class InventoryManagementController implements Initializable {
 
     //create an itemObservableList
     ObservableList<InventoryItem> itemObservableList = FXCollections.observableArrayList();
+
+    //create a filteredList
+    FilteredList<InventoryItem> filteredList;
 
     //create a file chooser
     FileChooser fileChooser;
@@ -51,6 +61,9 @@ public class InventoryManagementController {
 
     @FXML // fx:id="searchTextField"
     private TextField searchTextField;
+
+    @FXML
+    private ChoiceBox<String> searchChoiceBox;
 
     @FXML // fx:id="cancelSearch"
     private Button cancelSearch;
@@ -114,7 +127,7 @@ public class InventoryManagementController {
             return row;
         });
 
-
+        //https://stackoverflow.com/questions/34698986/cancel-the-modification-of-a-tableview-cell
         //initialize the itemNameColumn and add cell factory
         itemNameColumn.setCellValueFactory(cd -> cd.getValue().nameProperty());
         //set the cell factory for editable cell
@@ -122,7 +135,25 @@ public class InventoryManagementController {
         //set the text alignment to center
         itemNameColumn.setStyle("-fx-alignment: CENTER;");
         //set the editOnStart to call validate edit
-        itemNameColumn.setOnEditCommit((TableColumn.CellEditEvent<InventoryItem, String> t) -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue()));
+        itemNameColumn.setOnEditCommit(event -> {
+            //create a new item to hold the row
+            InventoryItem item = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            //create an instance of validate
+            ValidateTextFields validate = new ValidateTextFields();
+            //create a try block
+            try{
+                //create a string for newValue
+                String newValue = event.getNewValue();
+                //if validate name returns true set the newValue
+                if(validate.validateName(newValue)){
+                    item.setName(newValue);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            //refresh the tableview
+            tableView.refresh();
+        });
 
         //initialize the itemSerialNumberColumn and add cell factory
         itemSerialNumberColumn.setCellValueFactory(cd -> cd.getValue().serialNumberProperty());
@@ -131,16 +162,94 @@ public class InventoryManagementController {
         //set the text alignment to center
         itemSerialNumberColumn.setStyle("-fx-alignment: CENTER;");
         //set the editOnStart to call validate edit
-        itemSerialNumberColumn.setOnEditCommit((TableColumn.CellEditEvent<InventoryItem, String> t) -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setSerialNumber(t.getNewValue()));
+        itemSerialNumberColumn.setOnEditCommit(event -> {
+            //create a new item to hold the row
+            InventoryItem item = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            //create an instance of validate
+            ValidateTextFields validate = new ValidateTextFields();
+            //create a try block
+            try{
+                //create a string for newValue
+                String newValue = event.getNewValue();
+                //if validate returns true set the item
+                if(validate.validateSerialNumber(newValue)){
+                    item.setSerialNumber(newValue);
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            //refresh the tableView
+            tableView.refresh();
+        });
+
 
         //initialize the valueColumn and add cell factory
         itemValueColumn.setCellValueFactory(cd -> cd.getValue().valueProperty().asObject());
-//        //set table cell factory
-//        itemValueColumn.setCellFactory(TextFieldTableCell.forTableColumn(itemValueColumn));
-//        //set the text alignment to center
-//        itemValueColumn.setStyle("-fx-alignment: CENTER;");
-//        //set the editOnStart
-//        itemValueColumn.setOnEditCommit((TableColumn.CellEditEvent<InventoryItem, String> t) -> t.getTableView().getItems().get(t.getTablePosition().getRow()).setName(t.getNewValue()));
+        itemValueColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        //set table cell factory
+//        itemValueColumn.setCellFactory(c -> new TableCell<>(){
+//            @Override
+//            public void updateItem(Double price, boolean empty){
+//                super.updateItem(price, empty);
+//                if(empty){
+//                    setText(null);
+//                }else{
+//                    setText(String.format("$%.2f", price));
+//                }
+//            }
+//        });
+        //set the text alignment to center
+        itemValueColumn.setStyle("-fx-alignment: CENTER;");
+        //set the editOnStart to call validate edit
+        itemValueColumn.setOnEditCommit(event -> {
+            //create a new item to hold the row
+            InventoryItem item = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            //create an instance of validate
+            ValidateTextFields validate = new ValidateTextFields();
+            //create a try block
+            try{
+                //create a string for newValue
+                String newValue = String.valueOf(event.getNewValue());
+                if(newValue == null || newValue.matches("[a-zA-z]+")){
+                    PopupMessage popup = new PopupMessage();
+                    popup.invalidValue();
+                }else{
+                    //if validate returns true set the item
+                    if(validate.validateValue(Double.valueOf(newValue))){
+                        item.setValue(Double.parseDouble(newValue));
+                    }
+                }
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            //refresh the tableView
+            tableView.refresh();
+        });
+
+        searchChoiceBox.getItems().addAll("Serial Number", "Name");
+        searchChoiceBox.setValue("Serial Number");
+
+        //create a filteredList<InventoryItem>
+        filteredList = new FilteredList<>(itemObservableList, p -> true);
+
+        searchTextField.textProperty().addListener((obs, oldValue, newValue) -> {
+            //set the table items using the filtered list
+            tableView.setItems(filteredList);
+            switch(searchChoiceBox.getValue()){
+                case "Serial Number":
+                    filteredList.setPredicate(p-> p.getSerialNumber().toLowerCase(Locale.ROOT).contains(newValue.toLowerCase(Locale.ROOT).trim()));
+                    break;
+                case "Name":
+                    filteredList.setPredicate(p-> p.getName().toLowerCase(Locale.ROOT).contains(newValue.toLowerCase(Locale.ROOT).trim()));
+                    break;
+            }
+        });
+
+        searchChoiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal)->{
+            if(newVal != null){
+                searchTextField.setText("");
+            }
+        });
 
         //create new FileChooser() for fileChooser
         fileChooser = new FileChooser();
@@ -164,7 +273,7 @@ public class InventoryManagementController {
         InventoryItem item = null;
         //create an instance of CreateItem
         CreateItemInventory create = new CreateItemInventory();
-        if(value.getText().isBlank()){
+        if(value.getText().isBlank() || value.getText().matches("[a-zA-z]+")){
             //create a popup message
             PopupMessage popup = new PopupMessage();
             popup.invalidValue();
@@ -234,5 +343,6 @@ public class InventoryManagementController {
         //show the save dialog
         //if statement checking file is not null
     }
+
 
 }

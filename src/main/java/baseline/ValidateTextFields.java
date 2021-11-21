@@ -31,8 +31,14 @@ public class ValidateTextFields {
         PopupMessage popup = new PopupMessage();
         //create array for string parts
         String[] serialNumberParts = serialNumber.split("(-)");
+        for(int i = 1; i < serialNumberParts.length; i++){
+            if(serialNumberParts[i].length() != 3){
+                popup.invalidSerialNumber();
+                return false;
+            }
+        }
          //check if the number of parts is equal to 4 if not set actualResult to false
-        if(serialNumberParts.length != 4){
+        if(serialNumberParts.length != 4 || serialNumber.length() != 13){
             //call the corresponding popUp message for invalid name
             popup.invalidSerialNumber();
             return false;
