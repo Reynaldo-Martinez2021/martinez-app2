@@ -5,6 +5,8 @@ package baseline;
  *  Copyright 2021 Reynaldo Martinez
  */
 
+//I hope Juan sees this. I'm testing my getters and setters
+
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.junit.jupiter.api.Test;
