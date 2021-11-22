@@ -4,27 +4,19 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.control.skin.TableViewSkinBase;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import static java.lang.System.getProperties;
 
 /*
  *  UCF COP3330 Fall 2021 Application Assignment 2 Solution
@@ -54,23 +46,11 @@ public class InventoryManagementController implements Initializable {
     @FXML // fx:id="taskTitle"
     private TextField taskTitle;
 
-    @FXML // fx:id="openList"
-    private MenuItem openInventoryList;
-
-    @FXML // fx:id="saveList"
-    private MenuItem saveInventoryList;
-
-    @FXML // fx:id="searchButton"
-    private Button searchButton;
-
     @FXML // fx:id="searchTextField"
     private TextField searchTextField;
 
     @FXML
     private ChoiceBox<String> searchChoiceBox;
-
-    @FXML // fx:id="cancelSearch"
-    private Button cancelSearch;
 
     @FXML // fx:id="tableView"
     private TableView<InventoryItem> tableView;
@@ -92,9 +72,6 @@ public class InventoryManagementController implements Initializable {
 
     @FXML // fx:id="itemValueTextField"
     private TextField itemValueTextField;
-
-    @FXML // fx:id="addNewItemButton"
-    private Button addNewItemButton;
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     public void initialize(URL location, ResourceBundle resources) {
@@ -131,7 +108,6 @@ public class InventoryManagementController implements Initializable {
             return row;
         });
 
-        //https://stackoverflow.com/questions/34698986/cancel-the-modification-of-a-tableview-cell
         //initialize the itemNameColumn and add cell factory
         itemNameColumn.setCellValueFactory(cd -> cd.getValue().nameProperty());
         //set the cell factory for editable cell
@@ -213,18 +189,19 @@ public class InventoryManagementController implements Initializable {
             //create a try block
             try{
                 //create a string for newValue
-                String newValue = String.valueOf(event.getNewValue());
-                if(newValue == null || newValue.matches("[a-zA-z]+")){
+                Double newValue = event.getNewValue();
+                if(newValue == null){
                     PopupMessage popup = new PopupMessage();
                     popup.invalidValue();
                 }else{
                     //if validate returns true set the item
-                    if(validate.validateValue(Double.valueOf(newValue))){
-                        item.setValue(Double.parseDouble(newValue));
+                    if(validate.validateValue(newValue)){
+                        item.setValue(newValue);
                     }
                 }
             }catch(Exception e){
-                e.printStackTrace();
+                PopupMessage popup = new PopupMessage();
+                popup.invalidValue();
             }
             //refresh the tableView
             tableView.refresh();
