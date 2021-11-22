@@ -21,8 +21,8 @@ public class InventoryItem {
         return serialNumber;
     }
 
-    public SimpleStringProperty valueProperty(){
-        return new SimpleStringProperty(value.getValue().toString());
+    public SimpleDoubleProperty valueProperty(){
+        return value;
     }
 
     public final String getName(){

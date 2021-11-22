@@ -11,11 +11,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.converter.DoubleStringConverter;
 
 import java.io.File;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -57,7 +55,7 @@ public class InventoryManagementController implements Initializable {
     private TableView<InventoryItem> tableView;
 
     @FXML // fx:id="valueColumn"
-    private TableColumn<InventoryItem, String> itemValueColumn;
+    private TableColumn<InventoryItem, Double> itemValueColumn;
 
     @FXML // fx:id="itemNameColumn"
     private TableColumn<InventoryItem, String> itemNameColumn;
@@ -163,23 +161,8 @@ public class InventoryManagementController implements Initializable {
             tableView.refresh();
         });
 
-        DecimalFormat currency = new DecimalFormat("$0.00");
-
         //initialize the valueColumn and add cell factory
-        itemValueColumn.setCellValueFactory(cd -> cd.getValue().valueProperty());
-        itemValueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        //set table cell factory
-//        itemValueColumn.setCellFactory(c -> new TableCell<>(){
-//            @Override
-//            public void updateItem(Double price, boolean empty){
-//                super.updateItem(String.valueOf(price), empty);
-//                if(empty){
-//                    setText(null);
-//                }else{
-//                    setText(String.format("$%.2f", price));
-//                }
-//            }
-//        });
+        itemValueColumn.setCellValueFactory(cd -> cd.getValue().valueProperty().asObject());
         //set the text alignment to center
         itemValueColumn.setStyle("-fx-alignment: CENTER;");
         //set the editOnStart to call validate edit
@@ -191,14 +174,14 @@ public class InventoryManagementController implements Initializable {
             //create a try block
             try{
                 //create a string for newValue
-                String newValue = event.getNewValue();
+                Double newValue = event.getNewValue();
                 if(newValue == null){
                     PopupMessage popup = new PopupMessage();
                     popup.invalidValue();
                 }else{
                     //if validate returns true set the item
-                    if(validate.validateValue(Double.valueOf(newValue))){
-                        item.setValue(Double.parseDouble(newValue));
+                    if(validate.validateValue(newValue)){
+                        item.setValue(newValue);
                     }
                 }
             }catch(Exception e){
