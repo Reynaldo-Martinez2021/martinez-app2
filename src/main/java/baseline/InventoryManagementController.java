@@ -15,6 +15,7 @@ import javafx.util.converter.DoubleStringConverter;
 
 import java.io.File;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -56,7 +57,7 @@ public class InventoryManagementController implements Initializable {
     private TableView<InventoryItem> tableView;
 
     @FXML // fx:id="valueColumn"
-    private TableColumn<InventoryItem, Double> itemValueColumn;
+    private TableColumn<InventoryItem, String> itemValueColumn;
 
     @FXML // fx:id="itemNameColumn"
     private TableColumn<InventoryItem, String> itemNameColumn;
@@ -162,15 +163,16 @@ public class InventoryManagementController implements Initializable {
             tableView.refresh();
         });
 
+        DecimalFormat currency = new DecimalFormat("$0.00");
 
         //initialize the valueColumn and add cell factory
-        itemValueColumn.setCellValueFactory(cd -> cd.getValue().valueProperty().asObject());
-        itemValueColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        itemValueColumn.setCellValueFactory(cd -> cd.getValue().valueProperty());
+        itemValueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         //set table cell factory
 //        itemValueColumn.setCellFactory(c -> new TableCell<>(){
 //            @Override
 //            public void updateItem(Double price, boolean empty){
-//                super.updateItem(price, empty);
+//                super.updateItem(String.valueOf(price), empty);
 //                if(empty){
 //                    setText(null);
 //                }else{
@@ -189,14 +191,14 @@ public class InventoryManagementController implements Initializable {
             //create a try block
             try{
                 //create a string for newValue
-                Double newValue = event.getNewValue();
+                String newValue = event.getNewValue();
                 if(newValue == null){
                     PopupMessage popup = new PopupMessage();
                     popup.invalidValue();
                 }else{
                     //if validate returns true set the item
-                    if(validate.validateValue(newValue)){
-                        item.setValue(newValue);
+                    if(validate.validateValue(Double.valueOf(newValue))){
+                        item.setValue(Double.parseDouble(newValue));
                     }
                 }
             }catch(Exception e){
